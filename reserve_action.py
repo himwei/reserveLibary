@@ -1,9 +1,10 @@
 import requests
 import json
 from datetime import datetime, timedelta
-def reserveFun(inputCookie,dateChoose):
+import time
+def reserveFun(inputCookie,dateChoose,sleepSec):
   print("本程序默认预定的是东校区4楼 暂时无法进行更改 请须知")
-  print("本程序的预定规则是找出未被预定的座位 然后直接订一天 如果没有未被预定的座位 那么就无法进行预定")
+#   print("本程序的预定规则是找出未被预定的座位 然后直接订一天 如果没有未被预定的座位 那么就无法进行预定")
   # 可以不使用cookie
   # token = "5760a13519854b9c8b88770baa44af2c"
   cookie = inputCookie
@@ -22,9 +23,23 @@ def reserveFun(inputCookie,dateChoose):
   if dateChoose == "0":
     resvDateNumber = int(datetime.now().strftime('%Y%m%d'))
     resvDateStr = datetime.now().strftime('%Y-%m-%d')
-  else:
+  elif dateChoose == "1":
     resvDateNumber = int((datetime.now() + timedelta(days=1)).strftime('%Y%m%d'))
     resvDateStr = (datetime.now() + timedelta(days=1)).strftime('%Y-%m-%d')
+  elif dateChoose == "2":
+    resvDateNumber = int((datetime.now() + timedelta(days=2)).strftime('%Y%m%d'))
+    resvDateStr = (datetime.now() + timedelta(days=2)).strftime('%Y-%m-%d')
+    # 要进行等待 直到22:30:01
+    sleepSecCount = int(sleepSec)
+    while sleepSecCount > 0:
+      print("距离预定时间还有" + str(sleepSecCount) + "秒")
+      sleepSecCount -= 1
+      time.sleep(1)
+    # time.sleep(int(sleepSec))
+
+
+
+
 
   # 要传递的参数，以字典形式组织
   # 默认为东4楼
@@ -39,7 +54,7 @@ def reserveFun(inputCookie,dateChoose):
   url="http://icspace.lib.zjhu.edu.cn/ic-web/reserve"
   response = requests.get(url=url,  params=params, headers=headers)
   # # 获取原始的字节数据
-  content_bytes = response.content
+  # content_bytes = response.content
   # # 获取响应的文本内容
   response_text = response.text
   # print(response_text)
@@ -62,13 +77,41 @@ def reserveFun(inputCookie,dateChoose):
   # print(type(python_obj))
   # print(python_obj['data'])
   # 白名单机制 优先使用白名单 根据 座位名称 进行判断 如果白名单中的座位名称在resvInfo数组为空 则预定该座位 否则继续遍历 直到找到一个resvInfo数组为空的座位
+  # 白名单可以优先进行对完整空列表进行判断 如果白名单中的座位名称在resvInfo数组为空 则预定该座位 否则继续遍历 直到找到一个resvInfo数组为空的座位
+  whiteList = ["东4F140","东4F038","东4F056","东4F148","东4F132","东4F130"]
   for i in python_obj['data']:
       if i['resvInfo'] == []:
+          if i['devName'] in whiteList:
+              resvDev = i['devId']
+              print("预定座位id:" + str(i['devId']))
+              print("预定座位名称:" + str(i['devName']))
+              break
+
+  # # 黑名单机制 优先使用黑名单 根据 座位名称 进行判断 如果黑名单中的座位名称在resvInfo数组为空 则跳过该座位 否则继续遍历 直到找到一个resvInfo数组为空的座位
+  blackList = ["东4F139","东4F032","东4F055"]
+  
+  # 先从中间往后进行循环 如果没有找到 那么就从中间往前循环
+  middle_index = len(python_obj['data']) // 2
+  if resvDev == 0:
+    for i in range(middle_index, len(python_obj['data'])):
+        # print(i)
+        if python_obj['data'][i]['resvInfo'] == []:
+            # print(i['devName'])
+            if python_obj['data'][i]['devName'] not in blackList:
+                resvDev = python_obj['data'][i]['devId']
+                print("预定座位id:" + str(python_obj['data'][i]['devId']))
+                print("预定座位名称:" + str(python_obj['data'][i]['devName']))
+                break
+  if resvDev == 0:
+    for i in range(middle_index, -1, -1):
+       if python_obj['data'][i]['resvInfo'] == []:
           # print(i['devName'])
-          resvDev = i['devId']
-          print("预定座位id:" + str(i['devId']))
-          print("预定座位名称:" + str(i['devName']))
-          break
+          if python_obj['data'][i]['devName'] not in blackList:
+              resvDev = python_obj['data'][i]['devId']
+              print("预定座位id:" + str(python_obj['data'][i]['devId']))
+              print("预定座位名称:" + str(python_obj['data'][i]['devName']))
+              break
+  
   if resvDev == 0:
     print("未找到未被预定的座位 程序终止")
     return
@@ -93,9 +136,17 @@ def reserveFun(inputCookie,dateChoose):
   # 获取响应的文本内容
   response_text = response.text
   resvHistoryInfoObject = json.loads(response_text)
-  appAccNo = resvHistoryInfoObject['data'][0]['appAccNo']
-  print(appAccNo)
+#   print(resvHistoryInfoObject)
 
+  # 关于用户标识id 在22点后可能这个请求的结果会为空 导致无法正常获取id 建议自己使用时直接手动设置 例如appAccNo = 116379
+  appAccNo = resvHistoryInfoObject['data'][0]['appAccNo']
+#   appAccNo = 116379
+  print("用户标识id: "+str(appAccNo))
+
+  startTime = find_closest_time()if(dateChoose=='0')else"08:00"
+  print("预定开始时间")
+  print(resvDateStr+" "+startTime+":00")
+#   return
 
   #预定Object
   resvRequestObject = {
@@ -107,7 +158,8 @@ def reserveFun(inputCookie,dateChoose):
     ],
     # "resvBeginTime": "2024-11-26 08:00:00",
     # "resvEndTime": "2024-11-26 22:00:00",
-    "resvBeginTime": resvDateStr+" 08:00:00",
+    # "resvBeginTime": resvDateStr+" 08:00:00",
+    "resvBeginTime": resvDateStr+" "+startTime+":00",
     "resvEndTime": resvDateStr+" 22:00:00",
     "testName": "",
     "captcha": "",
@@ -125,6 +177,9 @@ def reserveFun(inputCookie,dateChoose):
 
   resvRequestObjectJson_str = json.dumps(resvRequestObject)
   resvUrl = "http://icspace.lib.zjhu.edu.cn/ic-web/reserve"
+
+  print("开始预定---------------------->")
+
   response = requests.post(url=resvUrl,  data=resvRequestObjectJson_str, headers=resvHeader)
 
   response_text = response.text
@@ -135,6 +190,63 @@ def reserveFun(inputCookie,dateChoose):
   else:
       print("预定失败，原因可能如下:")
       print(response_text_dump['message'])
+
+# 后天预定判断是否离22:30比较近
+def check_time_and_calculate(inputCookie,dateChoose):
+    current_time = datetime.now()
+    # 默认为0 表示当前时间不处于22点
+    seconds_difference = 0
+    # 判断是否处于22点
+    target_time_22_00 = current_time.replace(hour=22, minute=0, second=0, microsecond=0)
+    if target_time_22_00 <= current_time < target_time_22_00 + timedelta(minutes=1):
+        print("当前时间处于22点。")
+
+        # 进一步判断是否小于22:30
+        target_time_22_30 = current_time.replace(hour=22, minute=30, second=0, microsecond=0)
+        if current_time < target_time_22_30:
+            print("且当前时间小于22:30。")
+
+            # 计算离22:30:01还差多少秒
+            target_time_22_30_01 = current_time.replace(hour=22, minute=30, second=1, microsecond=0)
+            seconds_difference = (target_time_22_30_01 - current_time).total_seconds()
+            print(f"离22:30:01还差{seconds_difference}秒。")
+            # return seconds_difference
+            reserveFun(inputCookie,dateChoose,seconds_difference)
+        else:
+            print("且当前时间大于等于22:30。")
+            return seconds_difference
+
+    else:
+        target_time_22_30 = current_time.replace(hour=22, minute=30, second=0, microsecond=0)
+        if current_time > target_time_22_30:
+                # print("当前时间大于22:30。")
+            reserveFun(inputCookie,dateChoose,seconds_difference)
+        else:
+            print("当前时间既不处于22点也不大于22:30。")
+            return seconds_difference
+
+
+
+# 今天预定时匹配对应预定时间
+def find_closest_time():
+    current_time = datetime.now()
+
+    # 获取当前时间的分钟数
+    current_minute = current_time.minute
+
+    # if current_minute <= 7:
+    #     closest_time = current_time.replace(minute=0)
+    if current_minute <= 13:
+        closest_time = current_time.replace(minute=15)
+    elif current_minute <= 27:
+        closest_time = current_time.replace(minute=30)
+    elif current_minute <= 43:
+        closest_time = current_time.replace(minute=45)
+    else:
+        closest_time = current_time + timedelta(hours=1)
+        closest_time = closest_time.replace(minute=0)
+
+    return closest_time.strftime('%H:%M')
 
 
 def inputCookieFun():
@@ -160,13 +272,18 @@ def inputCookieFun():
         # print(f"你输入的是: {user_input}")
 def inputDateFun(cookie):
   while True:
-        print("预定日期 今天为0 明天为1  ")
+        print("预定日期 今天为0 明天为1 后天为2 ")
         user_input = input("")
         if user_input in ["0", "1"]:
             # print("输入正确！")
-            reserveFun(cookie,user_input)
+            reserveFun(cookie,user_input,0)
+            break
+        elif user_input == "2":
+            # reserveFun(cookie,user_input,check_time_and_calculate())
+            check_time_and_calculate(cookie,user_input)
             break
         else:
-            print("输入不符合要求，请重新输入0或1。")
+            print("输入不符合要求，请重新输入0或1或2。")
 if __name__ == "__main__":
   inputCookieFun()
+  # print(find_closest_time())
