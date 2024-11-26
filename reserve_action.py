@@ -140,7 +140,7 @@ def reserveFun(inputCookie,dateChoose,sleepSec):
 
   # 关于用户标识id 在22点后可能这个请求的结果会为空 导致无法正常获取id 建议自己使用时直接手动设置 例如appAccNo = 116379
   appAccNo = resvHistoryInfoObject['data'][0]['appAccNo']
-#   appAccNo = 116379
+  # appAccNo = 116379
   print("用户标识id: "+str(appAccNo))
 
   startTime = find_closest_time()if(dateChoose=='0')else"08:00"
@@ -197,12 +197,15 @@ def check_time_and_calculate(inputCookie,dateChoose):
     # 默认为0 表示当前时间不处于22点
     seconds_difference = 0
     # 判断是否处于22点
+    print("当前时间:", current_time)
     target_time_22_00 = current_time.replace(hour=22, minute=0, second=0, microsecond=0)
-    if target_time_22_00 <= current_time < target_time_22_00 + timedelta(minutes=1):
+    target_time_22_30 = current_time.replace(hour=22, minute=30, second=0, microsecond=0)
+
+    # if target_time_22_00 <= current_time < target_time_22_00 + timedelta(minutes=1):
+    if target_time_22_00 <= current_time < target_time_22_30:
         print("当前时间处于22点。")
 
         # 进一步判断是否小于22:30
-        target_time_22_30 = current_time.replace(hour=22, minute=30, second=0, microsecond=0)
         if current_time < target_time_22_30:
             print("且当前时间小于22:30。")
 
