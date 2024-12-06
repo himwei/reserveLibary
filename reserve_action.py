@@ -2,8 +2,10 @@ import requests
 import json
 from datetime import datetime, timedelta
 import time
+import random
 def reserveFun(inputCookie,dateChoose,sleepSec):
   print("本程序默认预定的是东校区4楼 暂时无法进行更改 请须知")
+  # print("本程序默认预定的是西校区5楼 暂时无法进行更改 请须知")
 #   print("本程序的预定规则是找出未被预定的座位 然后直接订一天 如果没有未被预定的座位 那么就无法进行预定")
   # 可以不使用cookie
   # token = "5760a13519854b9c8b88770baa44af2c"
@@ -45,7 +47,8 @@ def reserveFun(inputCookie,dateChoose,sleepSec):
   # 默认为东4楼
   
   params = {
-      "roomIds": 100455478,
+      # 西5楼
+      "roomIds": 100461276,
       # "resvDates": 20241126,
       "resvDates": resvDateNumber,
       "sysKind": 8
@@ -78,7 +81,8 @@ def reserveFun(inputCookie,dateChoose,sleepSec):
   # print(python_obj['data'])
   # 白名单机制 优先使用白名单 根据 座位名称 进行判断 如果白名单中的座位名称在resvInfo数组为空 则预定该座位 否则继续遍历 直到找到一个resvInfo数组为空的座位
   # 白名单可以优先进行对完整空列表进行判断 如果白名单中的座位名称在resvInfo数组为空 则预定该座位 否则继续遍历 直到找到一个resvInfo数组为空的座位
-  whiteList = ["东4F140","东4F038","东4F056","东4F148","东4F132","东4F130"]
+  # whiteList = ["东4F140","东4F038","东4F056","东4F148","东4F132","东4F130"]
+  whiteList = ["西5F032"]
   for i in python_obj['data']:
       if i['resvInfo'] == []:
           if i['devName'] in whiteList:
@@ -88,7 +92,8 @@ def reserveFun(inputCookie,dateChoose,sleepSec):
               break
 
   # # 黑名单机制 优先使用黑名单 根据 座位名称 进行判断 如果黑名单中的座位名称在resvInfo数组为空 则跳过该座位 否则继续遍历 直到找到一个resvInfo数组为空的座位
-  blackList = ["东4F139","东4F032","东4F055"]
+  # blackList = ["东4F139","东4F032","东4F055"]
+  blackList = []
   
   # 先从中间往后进行循环 如果没有找到 那么就从中间往前循环
   middle_index = len(python_obj['data']) // 2
@@ -141,7 +146,11 @@ def reserveFun(inputCookie,dateChoose,sleepSec):
   # 关于用户标识id 在22点后可能这个请求的结果会为空 导致无法正常获取id 建议自己使用时直接手动设置 例如appAccNo = 116379
   appAccNo = resvHistoryInfoObject['data'][0]['appAccNo']
   # appAccNo = 116379
-  print("用户标识id: "+str(appAccNo))
+  # print("用户标识id: "+str(appAccNo))
+  if resvHistoryInfoObject['data'][0]['resvName'] != '边任博':
+    print("预定失败 程序退出 请重试")
+    return 
+
 
   startTime = find_closest_time()if(dateChoose=='0')else"08:00"
   print("预定开始时间")
@@ -179,6 +188,12 @@ def reserveFun(inputCookie,dateChoose,sleepSec):
   resvUrl = "http://icspace.lib.zjhu.edu.cn/ic-web/reserve"
 
   print("开始预定---------------------->")
+
+
+  random_seconds = random.randint(3, 8)
+  # print(f"即将休眠 {random_seconds} 秒")
+  time.sleep(random_seconds)
+  # print("休眠结束")
 
   response = requests.post(url=resvUrl,  data=resvRequestObjectJson_str, headers=resvHeader)
 
