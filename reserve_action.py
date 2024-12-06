@@ -80,8 +80,7 @@ def reserveFun(inputCookie,dateChoose,sleepSec):
   # print(python_obj['data'])
   # 白名单机制 优先使用白名单 根据 座位名称 进行判断 如果白名单中的座位名称在resvInfo数组为空 则预定该座位 否则继续遍历 直到找到一个resvInfo数组为空的座位
   # 白名单可以优先进行对完整空列表进行判断 如果白名单中的座位名称在resvInfo数组为空 则预定该座位 否则继续遍历 直到找到一个resvInfo数组为空的座位
-  # whiteList = ["东4F140","东4F038","东4F056","东4F148","东4F132","东4F130"]
-  whiteList = ["西5F032"]
+  whiteList = ["东4F140","东4F038","东4F056","东4F148","东4F132","东4F130"]
   for i in python_obj['data']:
       if i['resvInfo'] == []:
           if i['devName'] in whiteList:
@@ -91,8 +90,8 @@ def reserveFun(inputCookie,dateChoose,sleepSec):
               break
 
   # # 黑名单机制 优先使用黑名单 根据 座位名称 进行判断 如果黑名单中的座位名称在resvInfo数组为空 则跳过该座位 否则继续遍历 直到找到一个resvInfo数组为空的座位
-  # blackList = ["东4F139","东4F032","东4F055"]
-  blackList = []
+  blackList = ["东4F139","东4F032","东4F055"]
+  # blackList = []
   
   # 先从中间往后进行循环 如果没有找到 那么就从中间往前循环
   middle_index = len(python_obj['data']) // 2
