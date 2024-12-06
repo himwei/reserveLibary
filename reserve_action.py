@@ -124,7 +124,7 @@ def reserveFun(inputCookie,dateChoose,sleepSec):
   getAppAccNoUrl = "http://icspace.lib.zjhu.edu.cn/ic-web/reserve/resvInfo"
   getAppAccNoUrlParams = {
       "beginDate": "2024-10-25",
-      "endDate": "2024-12-01",
+      "endDate": "2025-01-30",
       "needStatus": "8454",
       "page": "1",
       "pageNum": "10",
