@@ -190,9 +190,9 @@ def reserveFun(inputCookie,dateChoose,sleepSec):
   print("开始预定---------------------->")
 
 
-  random_seconds = random.randint(3, 8)
+  # random_seconds = random.randint(3, 8)
   # print(f"即将休眠 {random_seconds} 秒")
-  time.sleep(random_seconds)
+  # time.sleep(random_seconds)
   # print("休眠结束")
 
   response = requests.post(url=resvUrl,  data=resvRequestObjectJson_str, headers=resvHeader)
