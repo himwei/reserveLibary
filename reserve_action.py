@@ -47,8 +47,7 @@ def reserveFun(inputCookie,dateChoose,sleepSec):
   # 默认为东4楼
   
   params = {
-      # 西5楼
-      "roomIds": 100461276,
+      "roomIds": 100455478,
       # "resvDates": 20241126,
       "resvDates": resvDateNumber,
       "sysKind": 8
@@ -147,9 +146,6 @@ def reserveFun(inputCookie,dateChoose,sleepSec):
   appAccNo = resvHistoryInfoObject['data'][0]['appAccNo']
   # appAccNo = 116379
   # print("用户标识id: "+str(appAccNo))
-  if resvHistoryInfoObject['data'][0]['resvName'] != '边任博':
-    print("预定失败 程序退出 请重试")
-    return 
 
 
   startTime = find_closest_time()if(dateChoose=='0')else"08:00"
