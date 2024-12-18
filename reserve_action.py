@@ -200,6 +200,7 @@ def reserveFun(inputCookie,dateChoose,sleepSec):
   else:
       print("预定失败，原因可能如下:")
       print(response_text_dump['message'])
+  time.sleep(5)
 
 # 后天预定判断是否离22:30比较近
 def check_time_and_calculate(inputCookie,dateChoose):
