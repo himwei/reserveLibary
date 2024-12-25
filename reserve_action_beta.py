@@ -3,9 +3,9 @@ import json
 from datetime import datetime, timedelta
 import time
 import random
-def reserveFun(inputCookie,dateChoose,sleepSec):
-  roomChoose = 0
-  while True:
+def reserveFun(inputCookie,dateChoose,sleepSec,roomChoose = 0):
+  # roomChoose = 0
+  while True and roomChoose==0:
         print("预定楼层 目前仅支持 东4F 和 东5F 请输入4或5")
         roomChoose = input("")
         if roomChoose in ["4", "5"]:
@@ -88,28 +88,36 @@ def reserveFun(inputCookie,dateChoose,sleepSec):
   #     python_obj = json.load(f)
 
   resvDev = 0
-  python_obj = json.loads(response_text)
+  try:
+    python_obj = json.loads(response_text)
+    pass
+  except Exception as e:
+    reserveFun(inputCookie,dateChoose,0,'4')
   # 此时python_obj就是解析后的Python对象，可以进行后续操作了
   # print(type(python_obj))
   # print(python_obj['data'])
   # 白名单机制 优先使用白名单 根据 座位名称 进行判断 如果白名单中的座位名称在resvInfo数组为空 则预定该座位 否则继续遍历 直到找到一个resvInfo数组为空的座位
   # 白名单可以优先进行对完整空列表进行判断 如果白名单中的座位名称在resvInfo数组为空 则预定该座位 否则继续遍历 直到找到一个resvInfo数组为空的座位
   whiteList_4F = ["东4F140","东4F038","东4F056","东4F148","东4F132","东4F130"]
-  whiteList_5F = ["东5F001", "东5F003", "东5F004", "东5F005", "东5F006",
-                 "东5F007", "东5F008", "东5F009", "东5F010", "东5F011", "东5F012",
-                 "东5F013", "东5F014", "东5F015", "东5F016", "东5F017", "东5F018",
-                 "东5F019", "东5F020", "东5F021", "东5F022", "东5F023", "东5F024",
-                 "东5F025", "东5F026", "东5F027", "东5F028", "东5F029", "东5F030",
-                 "东5F065", "东5F066", "东5F067", "东5F068", "东5F069", "东5F070",
-                 "东5F071", "东5F072", "东5F073", "东5F074", "东5F075", "东5F076",
-                 "东5F077", "东5F078", "东5F079", "东5F080", "东5F081", "东5F082",
-                 "东5F083", "东5F084", "东5F085", "东5F086", "东5F087", "东5F088"]
+  # whiteList_5F = ["东5F001", "东5F003", "东5F004", "东5F005", "东5F006",
+  #                "东5F007", "东5F008", "东5F009", "东5F010", "东5F011", "东5F012",
+  #                "东5F013", "东5F014", "东5F015", "东5F016", "东5F017", "东5F018",
+  #                "东5F019", "东5F020", "东5F021", "东5F022", "东5F023", "东5F024",
+  #                "东5F025", "东5F026", "东5F027", "东5F028", "东5F029", "东5F030",
+  #                "东5F065", "东5F066", "东5F067", "东5F068", "东5F069", "东5F070",
+  #                "东5F071", "东5F072", "东5F073", "东5F074", "东5F075", "东5F076",
+  #                "东5F077", "东5F078", "东5F079", "东5F080", "东5F081", "东5F082",
+  #                "东5F083", "东5F084", "东5F085", "东5F086", "东5F087", "东5F088"]
+  whiteList_5F = ['东5F088', '东5F087', '东5F086', '东5F085', '东5F084', '东5F083', '东5F082', '东5F081', '东5F080', '东5F079', '东5F078', '东5F077', '东5F076', '东5F075', '东5F074', '东5F073', '东5F072', '东5F071', '东5F070', '东5F069', '东5F068', '东5F067', '东5F066', '东5F065', '东5F030', '东5F029', '东5F028', '东5F027', '东5F026', '东5F025', '东5F024', '东5F023', '东5F022', '东5F021', '东5F020', '东5F019', '东5F018', '东5F017', '东5F016', '东5F015', '东5F014', '东5F013', '东5F012', '东5F011', '东5F010', '东5F009', '东5F008', '东5F007', '东5F006', '东5F005', '东5F004', '东5F003', '东5F001']
+                 
   whiteList = whiteList_4F if roomChoose=='4' else whiteList_5F
   for i in python_obj['data']:
       if i['resvInfo'] == []:
           if i['devName'] in whiteList:
-              resvDev = i['devId']
-              print("预定座位id:" + str(i['devId']))
+              # resvDev = i['devId']
+              # print("预定座位id:" + str(i['devId']))
+              resvDev = i['devSn']
+              print("预定座位id:" + str(i['devSn']))
               print("预定座位名称:" + str(i['devName']))
               break
 
@@ -164,16 +172,16 @@ def reserveFun(inputCookie,dateChoose,sleepSec):
       "orderKey": "gmt_create",
       "orderModel": "desc"
   }
-  response = requests.get(url=getAppAccNoUrl,  params=getAppAccNoUrlParams, headers=headers)
+  # response = requests.get(url=getAppAccNoUrl,  params=getAppAccNoUrlParams, headers=headers)
   # 获取原始的字节数据
   # 获取响应的文本内容
-  response_text = response.text
-  resvHistoryInfoObject = json.loads(response_text)
+  # response_text = response.text
+  # resvHistoryInfoObject = json.loads(response_text)
 #   print(resvHistoryInfoObject)
 
   # 关于用户标识id 在22点后可能这个请求的结果会为空 导致无法正常获取id 建议自己使用时直接手动设置 例如appAccNo = 116379
-  appAccNo = resvHistoryInfoObject['data'][0]['appAccNo']
-  # appAccNo = 116379
+  # appAccNo = resvHistoryInfoObject['data'][0]['appAccNo']
+  appAccNo = 116379
   # print("用户标识id: "+str(appAccNo))
 
 
@@ -230,6 +238,8 @@ def reserveFun(inputCookie,dateChoose,sleepSec):
   else:
       print("预定失败，原因可能如下:")
       print(response_text_dump['message'])
+      print("正在尝试重新进行预定")
+      reserveFun(inputCookie,dateChoose,0,'4')
   time.sleep(5)
 
 # 后天预定判断是否离22:30比较近
@@ -251,7 +261,7 @@ def check_time_and_calculate(inputCookie,dateChoose):
             print("且当前时间小于22:30。")
 
             # 计算离22:30:01还差多少秒
-            target_time_22_30_01 = current_time.replace(hour=22, minute=30, second=1, microsecond=0)
+            target_time_22_30_01 = current_time.replace(hour=22, minute=30, second=0, microsecond=0)
             seconds_difference = (target_time_22_30_01 - current_time).total_seconds()
             print(f"离22:30:01还差{seconds_difference}秒。")
             # return seconds_difference
