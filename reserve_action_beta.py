@@ -5,14 +5,14 @@ import time
 import random
 def reserveFun(inputCookie,dateChoose,sleepSec,roomChoose = 0):
   # roomChoose = 0
-  while True and roomChoose==0:
+  while True and (roomChoose != '4' and roomChoose != '5'):
         print("预定楼层 目前仅支持 东4F 和 东5F 请输入4或5")
         roomChoose = input("")
         if roomChoose in ["4", "5"]:
             # print("输入正确！")
             break
         else:
-            print("输入不符合要求，请重新输入0或1或2。")
+            print("输入不符合要求，请重新输入4或5。")
 
 
   # print("本程序默认预定的是东校区4楼 暂时无法进行更改 请须知")
@@ -154,8 +154,11 @@ def reserveFun(inputCookie,dateChoose,sleepSec,roomChoose = 0):
               break
   
   if resvDev == 0:
-    print("未找到未被预定的座位 程序终止")
-    return
+    # print("未找到未被预定的座位 程序终止")
+    # return
+    print("未能找到未被预定的座位 正在尝试重新进行预定")
+    # print("正在尝试重新进行预定")
+    reserveFun(inputCookie,dateChoose,0,'4')
 
 
   # 预定座位
@@ -304,8 +307,9 @@ def find_closest_time():
 
 
 def inputCookieFun():
+    cookie_prefix = 'ic-cookie='
     while True:
-        print("请输入cookie:(输入quit结束程序)")
+        print("请输入cookie(直接输入ic-cookie=的后面值即可 前面不用输入 会自动进行补齐):(输入quit结束程序)")
         user_input = input()
 
         if not user_input:
@@ -315,13 +319,12 @@ def inputCookieFun():
         if user_input == "quit":
             print("程序即将结束。")
             break
-
-        if len(user_input) < 40 or len(user_input) > 80:
+        if len(user_input) < 30 or len(user_input) > 80:
             print("输入长度有误，请重新输入。")
             continue
         else:
           # reserveFun(user_input)
-          inputDateFun(user_input)
+          inputDateFun(cookie_prefix+user_input)
           break
         # print(f"你输入的是: {user_input}")
 def inputDateFun(cookie):
