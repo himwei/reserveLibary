@@ -3,7 +3,9 @@ import json
 from datetime import datetime, timedelta
 import time
 import random
-def reserveFun(inputCookie,dateChoose,sleepSec,roomChoose = 0):
+
+#预定函数
+def reserveFun(inputCookie,dateChoose,sleepSec,resTime,roomChoose = 0):
   # roomChoose = 0
   while True and (roomChoose != '4' and roomChoose != '5'):
         print("预定楼层 目前仅支持 东4F 和 东5F 请输入4或5")
@@ -53,7 +55,7 @@ def reserveFun(inputCookie,dateChoose,sleepSec,roomChoose = 0):
 
 
 
-  whiteList_4F = ["东4F140","东4F038","东4F056","东4F148","东4F132","东4F130"]
+  whiteList_4F = ["东4F140","东4F038","东4F048","东4F056","东4F148","东4F132","东4F130"]
   # whiteList_5F = ["东5F001", "东5F003", "东5F004", "东5F005", "东5F006",
   #                "东5F007", "东5F008", "东5F009", "东5F010", "东5F011", "东5F012",
   #                "东5F013", "东5F014", "东5F015", "东5F016", "东5F017", "东5F018",
@@ -76,8 +78,9 @@ def reserveFun(inputCookie,dateChoose,sleepSec,roomChoose = 0):
                   "东5F057", "东5F058", "东5F059", "东5F060"]
   blackList = blackList_4F if roomChoose=='4' else blackList_5F
 
-
-  startTime = find_closest_time()if(dateChoose=='0')else"08:00"
+  #默认开始时间
+  # startTime = find_closest_time()if(dateChoose=='0')else"13:00"
+  startTime = find_closest_time()if(dateChoose=='0')else resTime
   print("预定开始时间")
   print(resvDateStr+" "+startTime+":00")
 
@@ -88,20 +91,20 @@ def reserveFun(inputCookie,dateChoose,sleepSec,roomChoose = 0):
   #撞车匹配 根据白名单直接进行预定
   # 5楼经过实践 不好撞车 所以暂时不进行撞车匹配
   print("正在进行撞车匹配 请稍等...")
-  # print("优先5楼")
-  # with open('filtered_East_5th_reserve_batch_sorted_rev.json', 'r', encoding='utf - 8') as file:
-  #   data = json.load(file)
-  #   # 遍历列表中的字典
-  #   for item in data:
-  #       if item['devName'] in whiteList_5F:
-  #             print("")
-  #             print("正在尝试预定"+item['devName']+"     " + "其id号为"+str(item['devSn']))
-  #             print("")
-  #             reserveResult = reserve_action(116379,resvDateStr,startTime,item['devSn'],headers)
-  #             if reserveResult==1:
-  #                 print("预定成功")
-  #                 time.sleep(5)
-  #                 return
+  print("优先5楼")
+  with open('filtered_East_5th_reserve_batch_sorted_rev.json', 'r', encoding='utf - 8') as file:
+    data = json.load(file)
+    # 遍历列表中的字典
+    for item in data:
+        if item['devName'] in whiteList_5F:
+              print("")
+              print("正在尝试预定"+item['devName']+"     " + "其id号为"+str(item['devSn']))
+              print("")
+              reserveResult = reserve_action(116379,resvDateStr,startTime,item['devSn'],headers)
+              if reserveResult==1:
+                  print("预定成功")
+                  time.sleep(5)
+                  return
 
   print("正在进行4楼撞车匹配 请稍等...")
 
@@ -156,7 +159,11 @@ def reserveFun(inputCookie,dateChoose,sleepSec,roomChoose = 0):
       response_text = response.text
   except Exception as e:
       print(e)
-      reserveFun(inputCookie,dateChoose,0,'4')
+      #只要有异常就进行4楼保守模式进行预定 因为4楼预定成功的概率会比较大
+      print()
+      print('程序出错 进入保守4楼模式进行预定------------------')
+      print()
+      reserveFun(inputCookie,dateChoose,0,resTime,'4')
 
   # print(response_text)
   # response_text = content_bytes.decode('UTF-8')
@@ -177,7 +184,11 @@ def reserveFun(inputCookie,dateChoose,sleepSec,roomChoose = 0):
     python_obj = json.loads(response_text)
     pass
   except Exception as e:
-    reserveFun(inputCookie,dateChoose,0,'4')
+    #只要有异常就进行4楼保守模式进行预定 因为4楼预定成功的概率会比较大
+    print()
+    print('程序出错 进入保守4楼模式进行预定------------------')
+    print()
+    reserveFun(inputCookie,dateChoose,0,resTime,'4')
   # 此时python_obj就是解析后的Python对象，可以进行后续操作了
   # print(type(python_obj))
   # print(python_obj['data'])
@@ -227,11 +238,11 @@ def reserveFun(inputCookie,dateChoose,sleepSec,roomChoose = 0):
     # return
     print("")
     print("")
-    print("----------------未能找到未被预定的座位 正在尝试重新进行预定--------------------")
+    print("----------------未能找到未被预定的座位 正在尝试重新进行预定 进行4楼保守模式--------------------")
     # print("正在尝试重新进行预定")
     print("")
     print("")
-    reserveFun(inputCookie,dateChoose,0,'4')
+    reserveFun(inputCookie,dateChoose,0,resTime,'4')
 
 
   # 预定座位
@@ -317,7 +328,7 @@ def reserveFun(inputCookie,dateChoose,sleepSec,roomChoose = 0):
       print("")
       print(response_text_dump['message'])
       print("--------------正在尝试重新进行预定-------------------")
-      reserveFun(inputCookie,dateChoose,0,'4')
+      reserveFun(inputCookie,dateChoose,0,resTime,'4')
       print("")
       print("")
   time.sleep(5)
@@ -385,7 +396,7 @@ def reserve_action(appAccNo,resvDateStr,startTime,resvDev,headers):
 
 
 # 后天预定判断是否离22:30比较近
-def check_time_and_calculate(inputCookie,dateChoose):
+def check_time_and_calculate(inputCookie,dateChoose,resTime):
     current_time = datetime.now()
     # 默认为0 表示当前时间不处于22点
     seconds_difference = 0
@@ -407,7 +418,7 @@ def check_time_and_calculate(inputCookie,dateChoose):
             seconds_difference = (target_time_22_30_01 - current_time).total_seconds()
             print(f"离22:30:01还差{seconds_difference}秒。")
             # return seconds_difference
-            reserveFun(inputCookie,dateChoose,seconds_difference)
+            reserveFun(inputCookie,dateChoose,seconds_difference,resTime)
         else:
             print("且当前时间大于等于22:30。")
             return seconds_difference
@@ -416,7 +427,7 @@ def check_time_and_calculate(inputCookie,dateChoose):
         target_time_22_30 = current_time.replace(hour=22, minute=30, second=0, microsecond=0)
         if current_time > target_time_22_30:
                 # print("当前时间大于22:30。")
-            reserveFun(inputCookie,dateChoose,seconds_difference)
+            reserveFun(inputCookie,dateChoose,seconds_difference,resTime)
         else:
             print("当前时间既不处于22点也不大于22:30。")
             return seconds_difference
@@ -444,6 +455,17 @@ def find_closest_time():
 
     return closest_time.strftime('%H:%M')
 
+# 预定小时时间
+def res_start_time():
+  input_text = input("请输入预定开始小时数（默认值为 8点）：")
+  if input_text == "":
+      input_text = "8"
+
+  if len(input_text) == 1:
+      result = "0" + input_text + ":00"
+  else:
+      result = input_text + ":00"
+  return result
 
 def inputCookieFun():
     cookie_prefix = 'ic-cookie='
@@ -462,7 +484,6 @@ def inputCookieFun():
             print("输入长度有误，请重新输入。")
             continue
         else:
-          # reserveFun(user_input)
           inputDateFun(cookie_prefix+user_input)
           break
         # print(f"你输入的是: {user_input}")
@@ -472,14 +493,15 @@ def inputDateFun(cookie):
         user_input = input("")
         if user_input in ["0", "1"]:
             # print("输入正确！")
-            reserveFun(cookie,user_input,0)
+            res_time = res_start_time()
+            reserveFun(cookie,user_input,0,res_time)
             break
         elif user_input == "2":
             # reserveFun(cookie,user_input,check_time_and_calculate())
-            check_time_and_calculate(cookie,user_input)
+            res_time = res_start_time()
+            check_time_and_calculate(cookie,user_input,res_time)
             break
         else:
             print("输入不符合要求，请重新输入0或1或2。")
 if __name__ == "__main__":
   inputCookieFun()
-  # print(find_closest_time())
