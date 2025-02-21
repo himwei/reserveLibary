@@ -58,3 +58,7 @@
 ## 未来计划
 
 未来可能只需要输入账号和密码即可进行登录 彻底抛弃掉cookie和appAccNo参数
+
+## 联系
+
+邮箱: himweiyeah@qq.com
