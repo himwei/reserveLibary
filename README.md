@@ -9,7 +9,11 @@
 
 需要在进行预定前手动获取到自己的cookie以及appAccNo参数（如果不想改代码的话）
 
-如要使用请下载源代码并执行 **reserve_action_beta_advanced.py** 这个文件
+如要使用请下载源代码后
+
+使用 `pip install -r requirements.txt` 来安装依赖
+
+并执行 **reserve_action_beta_advanced.py** 这个文件
 
 ### cookie
 
@@ -47,7 +51,7 @@
 
 ![image-20250221104108358](README.assets/image-20250221104108358.jpg)
 
-然后修改代码中的  **appAccNo = ** 的这个值为你的复制值
+然后修改代码中的  appAccNo =  的值为你的复制值
 
 ### 方法二 改代码实现自动获取appAccNo参数
 
