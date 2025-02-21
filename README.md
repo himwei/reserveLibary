@@ -19,7 +19,7 @@
 
 例图
 
-![image-20250221103053546](E:\himwei all code projects\python himwei\reserveLibary\reserveLibary\README.assets\image-20250221103053546.jpg)
+![image-20250221103053546](\README.assets\image-20250221103053546.jpg)
 
 
 
@@ -45,13 +45,13 @@
 
 例图
 
-![image-20250221104108358](E:\himwei all code projects\python himwei\reserveLibary\reserveLibary\README.assets\image-20250221104108358.jpg)
+![image-20250221104108358](\README.assets\image-20250221104108358.jpg)
 
 然后修改代码中的  **appAccNo = ** 的这个值为你的复制值
 
 ### 方法二 改代码实现自动获取appAccNo参数
 
-![image-20250221103420708](E:\himwei all code projects\python himwei\reserveLibary\reserveLibary\README.assets\image-20250221103420708.jpg)
+![image-20250221103420708](\README.assets\image-20250221103420708.jpg)
 
 将红框部分解除注释并将271行（即红框下一行的代码）进行注释即可
 
