@@ -13,7 +13,7 @@
 
 使用 `pip install -r requirements.txt` 来安装依赖
 
-并执行 **reserve_action_beta_advanced.py** 这个文件
+并执行 **reserve_action_beta_advanced_production.py** 这个文件
 
 ### cookie
 
