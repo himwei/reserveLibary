@@ -29,7 +29,7 @@ def sort_json_by_devName(json_file_path):
 
 
 # 示例用法，根据实际情况修改此处的JSON文件路径
-json_file_path = "filtered_East_4th_reserve_batch.json"
+json_file_path = "2th_round_reserve_one_seat_clear.json"
 sorted_result = sort_json_by_devName(json_file_path)
 if sorted_result:
     print(f"排序后的结果已成功保存到 {json_file_path.split('.')[0]}_sorted.json 文件中。")

@@ -5,12 +5,16 @@ import time
 import random
 
 
-whiteList_5F_need_random1 = ['东5F088','东5F084',  '东5F080','东5F076',  '东5F072',  '东5F068']
-whiteList_5F_need_random2 = ['东5F087', '东5F086', '东5F083', '东5F082', '东5F079', '东5F078', '东5F075', '东5F074', '东5F071', '东5F070', '东5F067', '东5F066']
-random.shuffle(whiteList_5F_need_random1)
+whiteList_5F_need_random1_1 = ['东5F067', '东5F075', '东5F074', '东5F082', '东5F083']
+whiteList_5F_need_random1_2 = ['东5F085', '东5F077', '东5F069']
+whiteList_5F_need_random2 = ['东5F088', '东5F080', '东5F072','东5F084', '东5F076', '东5F068','东5F087', '东5F086', '东5F079', '东5F078', '东5F071']
+random.shuffle(whiteList_5F_need_random1_1)
+random.shuffle(whiteList_5F_need_random1_2)
+whiteList_5F_need_random1 = whiteList_5F_need_random1_1 + whiteList_5F_need_random1_2
+# random.shuffle(whiteList_5F_need_random1)
 random.shuffle(whiteList_5F_need_random2)
 whiteList_5F_need_random = whiteList_5F_need_random1+whiteList_5F_need_random2
-whiteList_5F_backup = [ '东5F081', '东5F085', '东5F077', '东5F073', '东5F069', '东5F065', '东5F030', '东5F029', '东5F028', '东5F027', '东5F026', '东5F025', '东5F024', '东5F023', '东5F022', '东5F021', '东5F020', '东5F019', '东5F018', '东5F017', '东5F016', '东5F015', '东5F014', '东5F013', '东5F012', '东5F011', '东5F010', '东5F009', '东5F008', '东5F007', '东5F006', '东5F005', '东5F004', '东5F003', '东5F001']
+whiteList_5F_backup = [ '东5F081', '东5F085', '东5F077', '东5F069', '东5F073', '东5F065',  '东5F070','东5F066''东5F030', '东5F029', '东5F028', '东5F027', '东5F026', '东5F025', '东5F024', '东5F023', '东5F022', '东5F021', '东5F020', '东5F019', '东5F018', '东5F017', '东5F016', '东5F015', '东5F014', '东5F013', '东5F012', '东5F011', '东5F010', '东5F009', '东5F008', '东5F007', '东5F006', '东5F005', '东5F004', '东5F003', '东5F001']
 whiteList_5F = whiteList_5F_need_random+whiteList_5F_backup
 with open('filtered_East_5th_reserve_batch_sorted_rev.json', 'r', encoding='utf - 8') as file:
     data_5th_json_array = json.load(file)
@@ -56,12 +60,14 @@ def reserveFun(inputCookie,dateChoose,sleepSec,resTime,roomChoose = 0):
   elif dateChoose == "2":
     resvDateNumber = int((datetime.now() + timedelta(days=2)).strftime('%Y%m%d'))
     resvDateStr = (datetime.now() + timedelta(days=2)).strftime('%Y-%m-%d')
-    # 要进行等待 直到22:30:01
-    sleepSecCount = int(sleepSec)
-    while sleepSecCount > 0:
-      print("距离预定时间还有" + str(sleepSecCount) + "秒")
-      sleepSecCount -= 1
-      time.sleep(1)
+    # 要进行等待 直到22:30
+    # sleepSecCount = int(sleepSec)
+    # while sleepSecCount > 0:
+    #   print("距离预定时间还有" + str(sleepSecCount) + "秒")
+    #   sleepSecCount -= 1
+    #   time.sleep(1)
+    print("距离预定时间还有" + str(sleepSec) + "秒")
+    time.sleep(sleepSec)
     # time.sleep(int(sleepSec))
 
 
@@ -449,7 +455,7 @@ def check_time_and_calculate(inputCookie,dateChoose,resTime):
             # 计算离22:30:01还差多少秒
             target_time_22_30_01 = current_time.replace(hour=22, minute=30, second=0, microsecond=0)
             seconds_difference = (target_time_22_30_01 - current_time).total_seconds()
-            print(f"离22:30:01还差{seconds_difference}秒。")
+            print(f"离22:30还差{seconds_difference}秒。")
             # return seconds_difference
             reserveFun(inputCookie,dateChoose,seconds_difference,resTime,'5')
         else:
