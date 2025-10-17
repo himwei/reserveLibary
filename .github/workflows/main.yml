@@ -1,0 +1,21 @@
+name: Deploy JSON to Cloudflare Pages
+
+on:
+  push:
+    branches:
+      - main   # 或你想部署的分支
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # 1️⃣ 检出仓库
+      - uses: actions/checkout@v3
+
+      # 2️⃣ 部署到 Cloudflare Pages
+      - uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CF_API_TOKEN }}
+          accountId: ${{ secrets.CF_ACCOUNT_ID }}
+          projectName: my-json-assets      # 你的 Pages 项目名称
+          directory: json                  # 指定要部署的目录
