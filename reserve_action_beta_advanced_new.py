@@ -9,11 +9,11 @@ import random
 whiteList_north_2F_need_random = ['2F-N055', '2F-N056', '2F-N057', '2F-N058', '2F-N059', '2F-N060', '2F-N061', '2F-N062', '2F-N063', '2F-N064', '2F-N065', '2F-N066', '2F-N067', '2F-N068', '2F-N069', '2F-N070', '2F-N071', '2F-N072', '2F-N073', '2F-N074', '2F-N075', '2F-N076']
 whiteList_north_2F = whiteList_north_2F_need_random
 #北区
-with open('2th_north_reserve_one_seat_clear_sorted_rev.json', 'r', encoding='utf - 8') as file:
+with open('json/2th_north_reserve_one_seat_clear_sorted_rev.json', 'r', encoding='utf - 8') as file:
     data_north_2th_json_array = json.load(file)
 dev_name_to_sn_mapping_north_2th = {item["devName"]: item["devSn"] for item in data_north_2th_json_array}
 #环廊
-with open('2th_round_reserve_one_seat_clear_sorted_rev.json', 'r', encoding='utf - 8') as file:
+with open('json/2th_round_reserve_one_seat_clear_sorted_rev.json', 'r', encoding='utf - 8') as file:
     data_round_2th_json_array = json.load(file)
 dev_name_to_sn_mapping_round_2th = {item["devName"]: item["devSn"] for item in data_round_2th_json_array}
 
