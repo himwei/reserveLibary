@@ -1,0 +1,112 @@
+[
+    {
+        "devId": 1147,
+        "devSn": 1147,
+        "devName": "3F-W010",
+        "kindId": 2,
+        "kindName": "阅览座位",
+        "roomId": 29,
+        "roomName": "三楼西区",
+        "labName": "图书馆三楼",
+        "labId": 6
+    },
+    {
+        "devId": 1146,
+        "devSn": 1146,
+        "devName": "3F-W009",
+        "kindId": 2,
+        "kindName": "阅览座位",
+        "roomId": 29,
+        "roomName": "三楼西区",
+        "labName": "图书馆三楼",
+        "labId": 6
+    },
+    {
+        "devId": 1145,
+        "devSn": 1145,
+        "devName": "3F-W008",
+        "kindId": 2,
+        "kindName": "阅览座位",
+        "roomId": 29,
+        "roomName": "三楼西区",
+        "labName": "图书馆三楼",
+        "labId": 6
+    },
+    {
+        "devId": 406,
+        "devSn": 406,
+        "devName": "3F-W007",
+        "kindId": 2,
+        "kindName": "阅览座位",
+        "roomId": 29,
+        "roomName": "三楼西区",
+        "labName": "图书馆三楼",
+        "labId": 6
+    },
+    {
+        "devId": 405,
+        "devSn": 405,
+        "devName": "3F-W006",
+        "kindId": 2,
+        "kindName": "阅览座位",
+        "roomId": 29,
+        "roomName": "三楼西区",
+        "labName": "图书馆三楼",
+        "labId": 6
+    },
+    {
+        "devId": 404,
+        "devSn": 404,
+        "devName": "3F-W005",
+        "kindId": 2,
+        "kindName": "阅览座位",
+        "roomId": 29,
+        "roomName": "三楼西区",
+        "labName": "图书馆三楼",
+        "labId": 6
+    },
+    {
+        "devId": 403,
+        "devSn": 403,
+        "devName": "3F-W004",
+        "kindId": 2,
+        "kindName": "阅览座位",
+        "roomId": 29,
+        "roomName": "三楼西区",
+        "labName": "图书馆三楼",
+        "labId": 6
+    },
+    {
+        "devId": 402,
+        "devSn": 402,
+        "devName": "3F-W003",
+        "kindId": 2,
+        "kindName": "阅览座位",
+        "roomId": 29,
+        "roomName": "三楼西区",
+        "labName": "图书馆三楼",
+        "labId": 6
+    },
+    {
+        "devId": 401,
+        "devSn": 401,
+        "devName": "3F-W002",
+        "kindId": 2,
+        "kindName": "阅览座位",
+        "roomId": 29,
+        "roomName": "三楼西区",
+        "labName": "图书馆三楼",
+        "labId": 6
+    },
+    {
+        "devId": 400,
+        "devSn": 400,
+        "devName": "3F-W001",
+        "kindId": 2,
+        "kindName": "阅览座位",
+        "roomId": 29,
+        "roomName": "三楼西区",
+        "labName": "图书馆三楼",
+        "labId": 6
+    }
+]

@@ -116,18 +116,20 @@ def reserveFun(inputCookie,dateChoose,sleepSec,resTime,roomChoose = 0):
           print("正在尝试预定"+item+"     " + "其id号为"+str(dev_name_to_sn_mapping_north_2th[item]))
           print("")
           reserveResult = reserve_action(39689,resvDateStr,startTime,dev_name_to_sn_mapping_north_2th[item],headers)
+          time.sleep(1)
           if reserveResult==1:
               print("预定成功")
               time.sleep(5)
               return
           
 
-  print("北区预定失败------------正在进行2楼环廊预定匹配 请稍等...")
+#   print("北区预定失败------------正在进行2楼环廊预定匹配 请稍等...")
 
   for item in data_round_2th_json_array:
     print("正在尝试预定"+item['devName']+"     " + "其id号为"+str(item['devSn']))
     print("")
     reserveResult = reserve_action(39689,resvDateStr,startTime,item['devSn'],headers)
+    time.sleep(1)
     if reserveResult==1:
         print("预定成功")
         time.sleep(5)
@@ -271,9 +273,10 @@ def find_closest_time():
 
 # 预定小时时间
 def res_start_time():
-  input_text = input("请输入预定开始小时数（默认值为 8点）：")
+  input_text = input("请输入预定开始小时数（默认值为 10点）：")
   if input_text == "":
-      input_text = "8"
+    #   input_text = "8"
+      input_text = "10"
 
   if len(input_text) == 1:
       result = "0" + input_text + ":00"
